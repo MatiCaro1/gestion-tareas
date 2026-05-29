@@ -1,0 +1,105 @@
+<div class="contenedor">
+  <h1>Gestión de Tareas</h1>
+  <p>Bienvenido a la aplicación de gestión de tareas. Aquí puedes crear, editar y eliminar tus tareas para mantenerte organizado.</p>
+
+  <!-- Resumen por prioridad -->
+  <div class="resumen-prioridades">
+    <div class="resumen-card alta">
+      <span class="resumen-numero">{{ contarPorPrioridad('Alta') }}</span>
+      <span class="resumen-etiqueta">Alta prioridad</span>
+    </div>
+    <div class="resumen-card media">
+      <span class="resumen-numero">{{ contarPorPrioridad('Media') }}</span>
+      <span class="resumen-etiqueta">Media prioridad</span>
+    </div>
+    <div class="resumen-card baja">
+      <span class="resumen-numero">{{ contarPorPrioridad('Baja') }}</span>
+      <span class="resumen-etiqueta">Baja prioridad</span>
+    </div>
+    <div class="resumen-card total">
+      <span class="resumen-numero">{{ tareas.length }}</span>
+      <span class="resumen-etiqueta">Total tareas</span>
+    </div>
+  </div>
+
+  <!-- Listado de tareas -->
+  <div class="lista-tareas">
+    @if (tareas.length === 0) {
+      <p class="sin-tareas">No hay tareas registradas aún.</p>
+    }
+
+    @for (tarea of tareas; track tarea.id) {
+      <div class="tarea-card" [class]="obtenerClasePrioridad(tarea.prioridad)">
+        <div class="tarea-barra-prioridad"></div>
+        <div class="tarea-contenido">
+          <div class="tarea-header">
+            <span class="tarea-titulo">{{ tarea.titulo }}</span>
+            <div class="tarea-badges">
+              <span class="badge-prioridad" [class]="obtenerClasePrioridad(tarea.prioridad)">
+                {{ tarea.prioridad | uppercase }}
+              </span>
+              <span class="badge-estado" [class]="obtenerClaseEstado(tarea.estado)">
+                {{ tarea.estado }}
+              </span>
+            </div>
+          </div>
+          <p class="tarea-descripcion">{{ tarea.descripcion }}</p>
+          <div class="tarea-footer">
+            <span class="tarea-fecha">Creada: {{ tarea.fechaCreacion | date:'dd/MM/yyyy' }}</span>
+            <div class="tarea-acciones">
+              <button mat-stroked-button (click)="cambiarEstado(tarea)">Cambiar estado</button>
+              <button mat-stroked-button color="warn" (click)="eliminarTarea(tarea.id)">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Formulario para agregar tarea -->
+  <mat-card class="formulario-card">
+    <mat-card-header>
+      <mat-card-title>Nueva Tarea</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Título</mat-label>
+          <input matInput [(ngModel)]="nuevaTarea.titulo" placeholder="Título de la tarea" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Prioridad</mat-label>
+          <mat-select [(ngModel)]="nuevaTarea.prioridad">
+            <mat-option value="Alta">Alta</mat-option>
+            <mat-option value="Media">Media</mat-option>
+            <mat-option value="Baja">Baja</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="nuevaTarea.estado">
+            <mat-option value="Pendiente">Pendiente</mat-option>
+            <mat-option value="En Progreso">En Progreso</mat-option>
+            <mat-option value="Completada">Completada</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de creación</mat-label>
+          <input matInput type="date" [(ngModel)]="nuevaTarea.fechaCreacion" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="campo-descripcion">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput [(ngModel)]="nuevaTarea.descripcion" rows="3" placeholder="Descripción de la tarea"></textarea>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="agregarTarea()">Agregar Tarea</button>
+      <button mat-button (click)="limpiarFormulario()">Limpiar</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -1,0 +1,164 @@
+.contenedor {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+/* ─── Resumen por prioridad ─── */
+.resumen-prioridades {
+  display: flex;
+  gap: 16px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.resumen-card {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border-radius: 12px;
+  color: white;
+}
+
+.resumen-card.alta  { background-color: var(--resumen-alta); }
+.resumen-card.media { background-color: var(--resumen-media); }
+.resumen-card.baja  { background-color: var(--resumen-baja); }
+.resumen-card.total { background-color: var(--resumen-total); }
+
+.resumen-numero {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.resumen-etiqueta {
+  font-size: 0.8rem;
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+/* ─── Lista de tareas ─── */
+.lista-tareas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.tarea-card {
+  display: flex;
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+  background: var(--mat-sys-surface-container);
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.tarea-barra-prioridad {
+  width: 6px;
+  flex-shrink: 0;
+}
+
+.tarea-card.prioridad-alta  .tarea-barra-prioridad { background-color: var(--resumen-alta); }
+.tarea-card.prioridad-media .tarea-barra-prioridad { background-color: var(--resumen-media); }
+.tarea-card.prioridad-baja  .tarea-barra-prioridad { background-color: var(--resumen-baja); }
+
+.tarea-contenido {
+  flex: 1;
+  padding: 14px 16px;
+}
+
+.tarea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tarea-titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.tarea-badges {
+  display: flex;
+  gap: 8px;
+}
+
+.badge-prioridad,
+.badge-estado {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Badges prioridad — usan nuestros tokens semánticos */
+.badge-prioridad.prioridad-alta  { background: var(--prioridad-alta-bg);  color: var(--prioridad-alta); }
+.badge-prioridad.prioridad-media { background: var(--prioridad-media-bg); color: var(--prioridad-media); }
+.badge-prioridad.prioridad-baja  { background: var(--prioridad-baja-bg);  color: var(--prioridad-baja); }
+
+/* Badges estado — usan tokens de Angular Material */
+.badge-estado.estado-pendiente   { background: var(--mat-sys-secondary-container); color: var(--mat-sys-on-secondary-container); }
+.badge-estado.estado-en-progreso { background: var(--mat-sys-tertiary-container);  color: var(--mat-sys-on-tertiary-container); }
+.badge-estado.estado-completada  { background: var(--prioridad-baja-bg);           color: var(--prioridad-baja); }
+
+.tarea-descripcion {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 8px 0 6px;
+}
+
+.tarea-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tarea-fecha {
+  font-size: 0.75rem;
+  color: var(--mat-sys-outline);
+}
+
+.tarea-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.sin-tareas {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 32px 0;
+}
+
+/* ─── Formulario ─── */
+.formulario-card {
+  margin-top: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.campo-descripcion {
+  grid-column: 1 / -1;
+}
+
+mat-card-actions {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+}

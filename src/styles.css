@@ -1,0 +1,49 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ─── Tokens semánticos de prioridad (modo claro) ─── */
+:root {
+  --prioridad-alta:    #c62828;
+  --prioridad-alta-bg: #ffebee;
+  --prioridad-media:    #e65100;
+  --prioridad-media-bg: #fff3e0;
+  --prioridad-baja:    #2e7d32;
+  --prioridad-baja-bg: #e8f5e9;
+
+  --resumen-alta:  #e53935;
+  --resumen-media: #fb8c00;
+  --resumen-baja:  #43a047;
+  --resumen-total: #1e88e5;
+
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ─── Tokens semánticos de prioridad (modo oscuro) ─── */
+body.dark-theme {
+  --prioridad-alta:    #ef9a9a;
+  --prioridad-alta-bg: rgba(229, 57, 53, 0.18);
+  --prioridad-media:    #ffcc80;
+  --prioridad-media-bg: rgba(251, 140, 0, 0.18);
+  --prioridad-baja:    #a5d6a7;
+  --prioridad-baja-bg: rgba(67, 160, 71, 0.18);
+
+  --resumen-alta:  #b71c1c;
+  --resumen-media: #bf360c;
+  --resumen-baja:  #1b5e20;
+  --resumen-total: #0d47a1;
+
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Transición global suave al cambiar tema */
+*, *::before, *::after {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}

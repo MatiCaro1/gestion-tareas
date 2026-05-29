@@ -1,0 +1,53 @@
+.layout {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  font-family: Roboto, sans-serif;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+.contenido {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.menu-lateral {
+  background-color: var(--mat-sys-surface-container-low);
+  padding: 1rem;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.menu-lateral nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-lateral a {
+  color: var(--mat-sys-on-surface-variant);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.menu-lateral a:hover {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.menu-lateral a.active {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+.theme-toggle {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}

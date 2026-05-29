@@ -1,0 +1,29 @@
+<div class="layout">
+  <aside class="menu-lateral">
+    <nav>
+      <a routerLink="/"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }">Inicio
+      </a>
+      <a routerLink="/tareas"
+         routerLinkActive="active">Tareas
+      </a>
+      <a routerLink="/acerca"
+         routerLinkActive="active">Acerca
+      </a>
+    </nav>
+
+    <div class="theme-toggle">
+      <button
+        mat-icon-button
+        (click)="toggleTheme()"
+        [matTooltip]="darkMode() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+        <mat-icon>{{ darkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+    </div>
+  </aside>
+
+  <main class="contenido">
+    <router-outlet></router-outlet>
+  </main>
+</div>
