@@ -47,3 +47,16 @@ body.dark-theme {
 *, *::before, *::after {
   transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
+
+/* ─── CDK Drag-Drop: preview global (escapa al body) ─── */
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+  background: var(--mat-sys-surface);
+  opacity: 0.95;
+}
+
+body.dark-theme .cdk-drag-preview {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+}

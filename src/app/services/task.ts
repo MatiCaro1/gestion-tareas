@@ -1,67 +1,40 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 import { Task } from '../models/task';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TaskService {
-  private storageKey = 'tareas';
 
-  constructor() {
-    this.inicializarTareas();
+  private apiUrl = 'http://localhost:3000/tareas';
+
+  constructor(private http: HttpClient) {}
+
+  obtenerTareas(): Observable<Task[]> {
+    return this.http.get<Task[]>(this.apiUrl);
   }
 
-  private inicializarTareas(): void {
-    const data = localStorage.getItem(this.storageKey);
-    if (!data) {
-      const tareasIniciales: Task[] = [
-        {
-          id: 1,
-          titulo: 'Aprendiendo Angular con los Frontend Masters',
-          estado: 'Pendiente',
-          prioridad: 'Alta',
-          fechaCreacion: '2026-05-28',
-          descripcion: 'Descripción de la tarea 1',
-        },
-        {
-          id: 2,
-          titulo: 'Aprendiendo TypeScript con los Frontend Masters',
-          estado: 'En Progreso',
-          prioridad: 'Media',
-          fechaCreacion: '2026-05-29',
-          descripcion: 'Descripción de la tarea 2',
-        },
-      ];
-      this.guardarTareas(tareasIniciales);
-    }
+  obtenerPorId(id: number): Observable<Task> {
+    return this.http.get<Task>(`${this.apiUrl}/${id}`);
   }
 
-  obtenerTareas(): Task[] {
-    const data = localStorage.getItem(this.storageKey);
-    return data ? JSON.parse(data) : [];
+  agregarTarea(tarea: Task): Observable<Task> {
+    return this.http.post<Task>(this.apiUrl, tarea);
   }
 
-  agregarTarea(tarea: Task): void {
-    const tareas = this.obtenerTareas();
-    tareas.push(tarea);
-    this.guardarTareas(tareas);
-  }
-
-  eliminarTarea(id: number): void {
-    const tareas = this.obtenerTareas();
-    const tareasActualizadas = tareas.filter((tarea) => tarea.id !== id);
-    this.guardarTareas(tareasActualizadas);
-  }
-
-  actualizarTarea(tareaActualizada: Task): void {
-    const tareas = this.obtenerTareas();
-    const tareasActualizadas = tareas.map((tarea) =>
-      tarea.id === tareaActualizada.id ? tareaActualizada : tarea
+  actualizarTarea(tarea: Task): Observable<Task> {
+    return this.http.put<Task>(
+      `${this.apiUrl}/${tarea.id}`,
+      tarea
     );
-    this.guardarTareas(tareasActualizadas);
   }
 
-  private guardarTareas(tareas: Task[]): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(tareas));
+  eliminarTarea(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`
+    );
   }
 }

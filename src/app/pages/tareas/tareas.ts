@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import {MatTableDataSource} from '@angular/material/table';
 
 import { TaskService } from '../../services/task';
 import { Task } from '../../models/task';
@@ -22,14 +23,15 @@ import { Task } from '../../models/task';
             MatInputModule,
             MatSelectModule,
             MatButtonModule,
-            MatTableModule
+            MatTableModule,
+
           ],
   templateUrl: './tareas.html',
   styleUrl: './tareas.css',
 })
 export class Tareas implements OnInit {
   tareas: Task[] = [];
-
+  dataSource = new MatTableDataSource<Task>();
   columnas: string[] = ['id', 'titulo', 'estado', 'prioridad', 'fechaCreacion', 'descripcion', 'acciones'];
 
   nuevaTarea: Task = {
@@ -55,7 +57,14 @@ export class Tareas implements OnInit {
     }
 
     cargarTareas() {
-      this.tareas = this.taskService.obtenerTareas();
+      this.taskService.obtenerTareas().subscribe({
+        next: (datos) => {
+          this.dataSource.data = datos;
+        },
+        error: (error) => {
+          console.error('Error al cargar tareas:', error);
+        }
+      });
     }
 
     agregarTarea() {
