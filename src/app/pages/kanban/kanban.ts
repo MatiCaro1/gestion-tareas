@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DatePipe, UpperCasePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   CdkDropList,
   CdkDropListGroup,
@@ -15,10 +14,10 @@ import {
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { TaskService } from '../../services/task';
 import { Task } from '../../models/task';
@@ -31,7 +30,6 @@ type Estado = (typeof ESTADOS)[number];
   imports: [
     DatePipe,
     UpperCasePipe,
-    FormsModule,
     CdkDropList,
     CdkDropListGroup,
     CdkDrag,
@@ -40,15 +38,12 @@ type Estado = (typeof ESTADOS)[number];
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
     MatTooltipModule,
   ],
   templateUrl: './kanban.html',
   styleUrl: './kanban.css',
 })
-export class Kanban implements OnInit {
+export class Kanban implements OnInit, OnDestroy {
   readonly columnas: Estado[] = ['Pendiente', 'En Progreso', 'Completada'];
 
   tareasColumna: Record<Estado, Task[]> = {
@@ -57,8 +52,8 @@ export class Kanban implements OnInit {
     Completada: [],
   };
 
-  mostrarFormulario = false;
-  nuevaTarea: Task = this.tareaVacia();
+  // Suscripción al Observable del timer para poder cancelarla al destruir el componente
+  private tareasSub = new Subscription();
 
   constructor(private taskService: TaskService) {}
 
@@ -66,13 +61,26 @@ export class Kanban implements OnInit {
     this.cargarTareas();
   }
 
+  ngOnDestroy() {
+    // Cancelar el timer al salir del componente para evitar memory leaks
+    this.tareasSub.unsubscribe();
+  }
+
   cargarTareas() {
-    const todas = this.taskService.obtenerTareas();
-    this.tareasColumna = {
-      Pendiente: todas.filter((t) => t.estado === 'Pendiente'),
-      'En Progreso': todas.filter((t) => t.estado === 'En Progreso'),
-      Completada: todas.filter((t) => t.estado === 'Completada'),
-    };
+    // timer(0, 5000): emite inmediatamente (0ms) y luego cada 5 segundos
+    // switchMap: por cada emisión del timer, cancela la petición anterior y lanza una nueva al servicio
+    this.tareasSub = timer(0, 5000).pipe(
+      switchMap(() => this.taskService.obtenerTareas())
+    ).subscribe({
+      next: (todas) => {
+        this.tareasColumna = {
+          Pendiente: todas.filter((t) => t.estado === 'Pendiente'),
+          'En Progreso': todas.filter((t) => t.estado === 'En Progreso'),
+          Completada: todas.filter((t) => t.estado === 'Completada'),
+        };
+      },
+      error: (error) => console.error('Error al cargar tareas:', error),
+    });
   }
 
   onDrop(event: CdkDragDrop<Task[]>, estado: Estado) {
@@ -87,7 +95,9 @@ export class Kanban implements OnInit {
       );
       const tarea = event.container.data[event.currentIndex];
       tarea.estado = estado;
-      this.taskService.actualizarTarea(tarea);
+      this.taskService.actualizarTarea(tarea).subscribe({
+        error: (error) => console.error('Error al actualizar tarea al arrastrar:', error),
+      });
     }
   }
 
@@ -105,27 +115,14 @@ export class Kanban implements OnInit {
     }
   }
 
-  eliminarTarea(id: number, estado: Estado) {
+  eliminarTarea(id: string, estado: Estado) {
     if (!confirm('¿Estás seguro de que deseas eliminar esta tarea?')) return;
-    this.taskService.eliminarTarea(id);
-    this.tareasColumna[estado] = this.tareasColumna[estado].filter((t) => t.id !== id);
-  }
-
-  agregarTarea() {
-    if (!this.nuevaTarea.titulo || !this.nuevaTarea.prioridad || !this.nuevaTarea.descripcion) {
-      alert('Por favor, completa los campos requeridos');
-      return;
-    }
-    const tarea: Task = {
-      ...this.nuevaTarea,
-      id: Date.now(),
-      estado: 'Pendiente',
-      fechaCreacion: new Date().toISOString().split('T')[0],
-    };
-    this.taskService.agregarTarea(tarea);
-    this.tareasColumna['Pendiente'] = [...this.tareasColumna['Pendiente'], tarea];
-    this.nuevaTarea = this.tareaVacia();
-    this.mostrarFormulario = false;
+    this.taskService.eliminarTarea(id).subscribe({
+      next: () => {
+        this.tareasColumna[estado] = this.tareasColumna[estado].filter((t) => t.id !== id);
+      },
+      error: (error) => console.error('Error al eliminar tarea:', error),
+    });
   }
 
   iconoEstado(estado: Estado): string {
@@ -143,12 +140,10 @@ export class Kanban implements OnInit {
 
   private moverTarea(tarea: Task, origen: Estado, destino: Estado) {
     tarea.estado = destino;
-    this.taskService.actualizarTarea(tarea);
+    this.taskService.actualizarTarea(tarea).subscribe({
+      error: (error) => console.error('Error al actualizar tarea:', error),
+    });
     this.tareasColumna[origen] = this.tareasColumna[origen].filter((t) => t.id !== tarea.id);
     this.tareasColumna[destino] = [...this.tareasColumna[destino], tarea];
-  }
-
-  private tareaVacia(): Task {
-    return { id: 0, titulo: '', estado: 'Pendiente', prioridad: '', fechaCreacion: '', descripcion: '' };
   }
 }

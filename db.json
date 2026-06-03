@@ -3,10 +3,42 @@
     {
       "id": "K6yR7jWqjDA",
       "titulo": "Revisar documentación",
-      "estado": "Pendiente",
+      "estado": "Completada",
       "prioridad": "Alta",
       "fechaCreacion": "2026-05-28",
       "descripcion": "Revisar antecedentes iniciales del caso."
+    },
+    {
+      "id": "nlZMEzl5qLA",
+      "titulo": "test",
+      "estado": "Pendiente",
+      "prioridad": "Media",
+      "fechaCreacion": "2026-06-02",
+      "descripcion": "awd\n"
+    },
+    {
+      "id": "yiL4Ge2HqU8",
+      "titulo": "Nueva Tarea",
+      "estado": "Pendiente",
+      "prioridad": "Baja",
+      "fechaCreacion": "2026-06-02",
+      "descripcion": "Nueva Tarea para la clase"
+    },
+    {
+      "id": "CLmhpffRZNg",
+      "titulo": "No carga automático :(",
+      "estado": "Pendiente",
+      "prioridad": "Media",
+      "fechaCreacion": "2026-06-02",
+      "descripcion": "detalles del camino"
+    },
+    {
+      "id": "2S-hKcRk_mA",
+      "titulo": "Prueba",
+      "estado": "Pendiente",
+      "prioridad": "Media",
+      "fechaCreacion": "2026-06-02",
+      "descripcion": "No creo"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

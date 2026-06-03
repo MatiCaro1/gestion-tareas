@@ -35,7 +35,7 @@ export class Tareas implements OnInit {
   columnas: string[] = ['id', 'titulo', 'estado', 'prioridad', 'fechaCreacion', 'descripcion', 'acciones'];
 
   nuevaTarea: Task = {
-    id: 0,
+    id: '',
     titulo: '',
     estado: '',
     prioridad: '',
@@ -79,7 +79,7 @@ export class Tareas implements OnInit {
         return;
       }
       const tarea: Task = {
-        id: Date.now(),
+        id: '',
         titulo: this.nuevaTarea.titulo,
         estado: this.nuevaTarea.estado,
         prioridad: this.nuevaTarea.prioridad,
@@ -87,19 +87,31 @@ export class Tareas implements OnInit {
         descripcion: this.nuevaTarea.descripcion,
       };
 
-      this.taskService.agregarTarea(tarea);
-      this.cargarTareas();
-      this.limpiarFormulario();
+      this.taskService.agregarTarea(tarea).subscribe({
+        next: (nuevaTarea) => {
+          this.cargarTareas();
 
+        },
+
+        error: (error) => {
+          console.error('Error al agregar tarea:', error);
+        }
+      });
     }
 
-    eliminarTarea(id: number) {
+    eliminarTarea(id: string) {
       const confirmar = confirm('¿Estás seguro de que deseas eliminar esta tarea?');
       if (!confirmar) {
         return;
       }
-      this.taskService.eliminarTarea(id);
-      this.cargarTareas();
+      this.taskService.eliminarTarea(id).subscribe({
+        next: () => {
+          this.cargarTareas();
+        },
+        error: (error) => {
+          console.error('Error al eliminar tarea:', error);
+        }
+      });
     }
 
 
@@ -111,13 +123,19 @@ export class Tareas implements OnInit {
       } else {
         tarea.estado = 'Pendiente';
       }
-      this.taskService.actualizarTarea(tarea);
-      this.cargarTareas();
+      this.taskService.actualizarTarea(tarea).subscribe({
+        next: () => {
+          this.cargarTareas();
+        },
+        error: (error) => {
+          console.error('Error al actualizar tarea:', error);
+        }
+      });
     }
 
     limpiarFormulario() {
       this.nuevaTarea = {
-        id: 0,
+        id: '',
         titulo: '',
         estado: '',
         prioridad: '',
@@ -138,7 +156,7 @@ export class Tareas implements OnInit {
     }
 
     contarPorPrioridad(prioridad: string): number {
-      return this.tareas.filter(t => t.prioridad === prioridad).length;
+      return this.dataSource.data.filter(t => t.prioridad === prioridad).length;
     }
 
     obtenerClasePrioridad(prioridad: string){
@@ -151,5 +169,9 @@ export class Tareas implements OnInit {
       }
       return '';
     }
+
+  existenTareas(){
+    return this.dataSource.data.length > 0;
+  }
 
 }

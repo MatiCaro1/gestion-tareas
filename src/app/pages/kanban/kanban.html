@@ -6,50 +6,7 @@
       <h1 class="kanban-titulo">Tablero Kanban</h1>
       <span class="total-badge">{{ totalTareas() }} tareas</span>
     </div>
-    <button mat-raised-button color="primary" (click)="mostrarFormulario = !mostrarFormulario">
-      <mat-icon>{{ mostrarFormulario ? 'close' : 'add' }}</mat-icon>
-      {{ mostrarFormulario ? 'Cancelar' : 'Nueva Tarea' }}
-    </button>
   </div>
-
-  <!-- Formulario nueva tarea -->
-  @if (mostrarFormulario) {
-    <mat-card class="formulario-card">
-      <mat-card-header>
-        <mat-card-title>Nueva Tarea</mat-card-title>
-        <mat-card-subtitle>Se creará en columna Pendiente</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="form-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Título *</mat-label>
-            <input matInput [(ngModel)]="nuevaTarea.titulo" placeholder="¿Qué hay que hacer?" />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Prioridad *</mat-label>
-            <mat-select [(ngModel)]="nuevaTarea.prioridad">
-              <mat-option value="Alta">Alta</mat-option>
-              <mat-option value="Media">Media</mat-option>
-              <mat-option value="Baja">Baja</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="campo-descripcion">
-            <mat-label>Descripción *</mat-label>
-            <textarea matInput [(ngModel)]="nuevaTarea.descripcion" rows="2"
-                      placeholder="Describe los detalles de la tarea"></textarea>
-          </mat-form-field>
-        </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-raised-button color="primary" (click)="agregarTarea()">
-          <mat-icon>add</mat-icon> Agregar
-        </button>
-        <button mat-button (click)="mostrarFormulario = false">Cancelar</button>
-      </mat-card-actions>
-    </mat-card>
-  }
 
   <!-- Tablero -->
   <div class="kanban-board" cdkDropListGroup>

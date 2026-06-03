@@ -17,7 +17,7 @@ export class TaskService {
     return this.http.get<Task[]>(this.apiUrl);
   }
 
-  obtenerPorId(id: number): Observable<Task> {
+  obtenerPorId(id: string): Observable<Task> {
     return this.http.get<Task>(`${this.apiUrl}/${id}`);
   }
 
@@ -32,7 +32,7 @@ export class TaskService {
     );
   }
 
-  eliminarTarea(id: number): Observable<void> {
+  eliminarTarea(id: string): Observable<void> {
     return this.http.delete<void>(
       `${this.apiUrl}/${id}`
     );
