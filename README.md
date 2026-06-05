@@ -1,59 +1,104 @@
-# GestionTareas
+# Gestión de Tareas
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.3.
+Aplicación web para gestionar tareas personales o de equipo, construida con **Angular 21** y **Angular Material**. Permite crear, editar, eliminar y organizar tareas por estado y prioridad desde dos vistas distintas: tabla y tablero Kanban.
 
-## Development server
+## Tecnologías
 
-To start a local development server, run:
+- [Angular 21](https://angular.dev/) — framework principal
+- [Angular Material](https://material.angular.io/) — componentes UI
+- [Angular CDK Drag & Drop](https://material.angular.io/cdk/drag-drop/overview) — arrastrar tarjetas en el Kanban
+- [JSON Server](https://github.com/typicode/json-server) — API REST simulada con `db.json`
+- [Vitest](https://vitest.dev/) — runner de pruebas unitarias
 
-```bash
-ng serve
+## Estructura del proyecto
+
+```
+src/app/
+├── models/
+│   └── task.ts           # Interfaz Task
+├── services/
+│   └── task.ts           # TaskService — CRUD contra la API
+└── pages/
+    ├── inicio/           # Página de bienvenida
+    ├── tareas/           # Vista de tabla con formulario de alta
+    ├── kanban/           # Tablero Kanban con drag & drop
+    └── acerca/           # Información sobre la aplicación
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Modelo de datos
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```typescript
+interface Task {
+  id: string;
+  titulo: string;
+  estado: 'Pendiente' | 'En Progreso' | 'Completada';
+  prioridad: 'Alta' | 'Media' | 'Baja';
+  fechaCreacion: string;   // YYYY-MM-DD
+  descripcion: string;
+}
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Instalación
 
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
+## Levantar el proyecto
 
-To build the project run:
+El comando `dev` inicia la API y el servidor de Angular al mismo tiempo:
 
 ```bash
-ng build
+npm run dev
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+| Servicio | URL |
+|----------|-----|
+| Aplicación Angular | http://localhost:4200 |
+| API REST (json-server) | http://localhost:3000/tareas |
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Comandos individuales
 
 ```bash
-ng test
+npm run start   # Solo Angular (ng serve)
+npm run api     # Solo JSON Server en el puerto 3000
 ```
 
-## Running end-to-end tests
+## Rutas de la aplicación
 
-For end-to-end (e2e) testing, run:
+| Ruta | Componente | Descripción |
+|------|-----------|-------------|
+| `/` | Inicio | Página principal |
+| `/tareas` | Tareas | Tabla con CRUD completo |
+| `/kanban` | Kanban | Tablero con drag & drop y auto-refresco cada 5 s |
+| `/acerca` | Acerca | Información del proyecto |
+
+## Funcionalidades principales
+
+### Vista Tareas (`/tareas`)
+- Formulario para crear nuevas tareas (título, estado, prioridad, fecha, descripción)
+- Tabla con todas las tareas usando `MatTable`
+- Cambio de estado cíclico: Pendiente → En Progreso → Completada → Pendiente
+- Eliminación con confirmación
+- Contadores de tareas por prioridad
+
+### Vista Kanban (`/kanban`)
+- Tres columnas: **Pendiente**, **En Progreso**, **Completada**
+- Arrastrar y soltar tarjetas entre columnas (CDK Drag & Drop)
+- Botones de avance/retroceso de estado por tarjeta
+- Auto-refresco de datos cada 5 segundos via `timer` + `switchMap`
+- Limpieza de suscripciones en `ngOnDestroy` para evitar memory leaks
+
+## Pruebas
 
 ```bash
-ng e2e
+npm test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Build de producción
 
-## Additional Resources
+```bash
+npm run build
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Los artefactos quedan en `dist/`.
